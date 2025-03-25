@@ -1,0 +1,74 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel_app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - .:/var/www
+        networks:
+            - laravel_network
+        depends_on:
+            - database
+            - redis
+            - mailhog
+        environment:
+            - REDIS_HOST=redis
+            - DB_HOST=database
+            - MAIL_HOST=mailhog
+            - MAIL_PORT=1025
+            - MAIL_MAILER=smtp
+
+    webserver:
+        image: nginx:alpine
+        container_name: laravel_webserver
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        volumes:
+            - .:/var/www
+            - ./docker/nginx:/etc/nginx/conf.d
+        networks:
+            - laravel_network
+        depends_on:
+            - app
+
+    database:
+        image: postgres:13
+        container_name: laravel_database
+        restart: unless-stopped
+        environment:
+            POSTGRES_DB: laravel
+            POSTGRES_USER: laravel
+            POSTGRES_PASSWORD: secret
+        volumes:
+            - ./docker/postgres:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        networks:
+            - laravel_network
+
+    redis:
+        image: redis:alpine
+        container_name: laravel_redis
+        restart: unless-stopped
+        ports:
+            - "6379:6379"
+        networks:
+            - laravel_network
+
+    mailhog:
+        image: mailhog/mailhog
+        container_name: laravel_mailhog
+        ports:
+            - "8025:8025"
+            - "1025:1025"
+        restart: unless-stopped
+        networks:
+            - laravel_network
+
+networks:
+    laravel_network:
+        driver: bridge
