@@ -58,7 +58,7 @@
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || 'Erro ao redefinir senha');
+          throw new Error(data.message || 'Erro ao redefinir senha');
         }
 
         alert(data.message);

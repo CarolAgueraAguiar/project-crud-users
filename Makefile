@@ -27,3 +27,16 @@ test:
 
 composer-install:
 	docker exec $(SERVICE_NAME) composer install
+
+clear:
+	docker exec $(SERVICE_NAME) php artisan optimize:clear
+
+# Otimiza a aplicação (cache de rotas, views, config)
+optimize:
+    docker exec $(SERVICE_NAME) php artisan config:cache
+    docker exec $(SERVICE_NAME) php artisan route:cache
+    docker exec $(SERVICE_NAME) php artisan event:cache
+
+# Se quiser um comando que limpa e recria tudo (útil para desenvolvimento)
+reset: clear migrate optimize
+

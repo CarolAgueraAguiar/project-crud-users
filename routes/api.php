@@ -1,7 +1,8 @@
 <?php
 
+use Application\User\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,18 +22,10 @@ Route::prefix('users')->group(function () {
     Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('resetPassword');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/', [UserController::class, 'index']);
-        Route::get('/{user}', [UserController::class, 'show']);
-        Route::put('/{user}', [UserController::class, 'update']);
-        Route::delete('/{user}', [UserController::class, 'destroy']);
+        Route::get('/all', [UserController::class, 'index']);
+        Route::get('/', [UserController::class, 'show']);
+        Route::put('/', [UserController::class, 'update']);
+        Route::delete('/', [UserController::class, 'destroy']);
         Route::post('/logout', [UserController::class, 'logout']);
     });
-});
-
-Route::get('/health', function () {
-    return response()->json([
-        'status' => 'ok',
-        'version' => '1.0',
-        'timestamp' => now()->toDateTimeString()
-    ]);
 });
