@@ -1,5 +1,5 @@
 
-# 📱 Aplicação de CRUD de usuários e envio de e-mail para redefinição de senha.
+# 📱 CRUD de usuários e envio de e-mail para redefinição de senha.
 
 ## 🧩 Tecnologias Utilizadas
 
